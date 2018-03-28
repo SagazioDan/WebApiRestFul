@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiRestFul", "WebApiRestFul\WebApiRestFul.csproj", "{5C586506-C2DC-4482-9AC8-ED3C5255C4FD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5C586506-C2DC-4482-9AC8-ED3C5255C4FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C586506-C2DC-4482-9AC8-ED3C5255C4FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C586506-C2DC-4482-9AC8-ED3C5255C4FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C586506-C2DC-4482-9AC8-ED3C5255C4FD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8FFA4A2A-E6FF-4C14-8DAD-B47E2AB7EE7F}
+	EndGlobalSection
+EndGlobal
