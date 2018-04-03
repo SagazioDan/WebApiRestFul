@@ -1,42 +1,46 @@
-﻿using System;
+﻿using GlobalCityManager.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using GlobalCityManager.Models;
 
 namespace WebApiRestFul.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Students")]
+    [Route("api/students")]
     public class StudentsController : Controller
     {
-        private readonly SchoolContext _context;
+        private readonly SchoolContext context;
 
-        public StudentsController(SchoolContext context)
+        public StudentsController(SchoolContext _context)
         {
-            _context = context;
+            context = _context;
         }
 
         // GET: api/Students
+        /// <summary>
+        /// Mostra tutti gli studenti.
+        /// </summary>
         [HttpGet]
-        public IEnumerable<Student> GetStudents()
+        public IActionResult GetStudents()
         {
-            return _context.Students;
+            return Ok(context.Students);
         }
 
         // GET: api/Students/5
+        /// <summary>
+        /// Mostra studente in base all'ID.
+        /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetStudent([FromRoute] int id)
+        public async Task<IActionResult> GetStudentAsync([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var student = await _context.Students.SingleOrDefaultAsync(m => m.ID == id);
+            var student = await context.Students.SingleOrDefaultAsync(m => m.ID == id);
 
             if (student == null)
             {
@@ -47,8 +51,11 @@ namespace WebApiRestFul.Controllers
         }
 
         // PUT: api/Students/5
+        /// <summary>
+        /// Modifica studente in base all'ID.
+        /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutStudent([FromRoute] int id, [FromBody] Student student)
+        public async Task<IActionResult> PutStudentAsync([FromRoute] int id, [FromBody] Student student)
         {
             if (!ModelState.IsValid)
             {
@@ -60,11 +67,11 @@ namespace WebApiRestFul.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(student).State = EntityState.Modified;
+            context.Entry(student).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -82,44 +89,65 @@ namespace WebApiRestFul.Controllers
         }
 
         // POST: api/Students
+        /// <summary>
+        /// Aggiunge studente.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Student
+        ///     {
+        ///        "ID": 0,
+        ///        "FirstMidName": "Mario",
+        ///        "LastName": "Rossi",
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="student"></param>
+        /// <returns>A newly-created CourseItem</returns>
         [HttpPost]
-        public async Task<IActionResult> PostStudent([FromBody] Student student)
+        public async Task<IActionResult> PostStudentAsync([FromBody] Student student)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Students.Add(student);
-            await _context.SaveChangesAsync();
+            context.Students.Add(student);
+            await context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudent", new { id = student.ID }, student);
+            CreatedAtAction("GetStudent", new { id = student.ID }, student);
+            return Ok(ModelState);
+
         }
 
         // DELETE: api/Students/5
+        /// <summary>
+        /// Canecella studente in base all'ID.
+        /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudent([FromRoute] int id)
+        public async Task<IActionResult> DeleteStudentAsync([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var student = await _context.Students.SingleOrDefaultAsync(m => m.ID == id);
+            var student = await context.Students.SingleOrDefaultAsync(m => m.ID == id);
             if (student == null)
             {
                 return NotFound();
             }
 
-            _context.Students.Remove(student);
-            await _context.SaveChangesAsync();
+            context.Students.Remove(student);
+            await context.SaveChangesAsync();
 
             return Ok(student);
         }
 
         private bool StudentExists(int id)
         {
-            return _context.Students.Any(e => e.ID == id);
+            return context.Students.Any(e => e.ID == id);
         }
     }
 }

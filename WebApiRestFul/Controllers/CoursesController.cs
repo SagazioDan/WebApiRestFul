@@ -21,15 +21,21 @@ namespace WebApiRestFul.Controllers
         }
 
         // GET: api/Courses
+        /// <summary>
+        /// Mostra tutti i corsi.
+        /// </summary>
         [HttpGet]
-        public IEnumerable<Course> GetCourses()
+        public ActionResult GetCourses()
         {
-            return _context.Courses;
+            return Ok(_context.Courses);
         }
 
-        // GET: api/Courses/5
+        //GET: api/Courses/5
+        /// <summary>
+        /// Mostra corsi in base all'ID.
+        /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCourse([FromRoute] int id)
+        public async Task<IActionResult> GetCourseAsync([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -46,9 +52,35 @@ namespace WebApiRestFul.Controllers
             return Ok(course);
         }
 
+
+        //GET: api/courses/title/matematica
+        /// <summary>
+        /// Mostra corsi in base al titolo del corso.
+        /// </summary>
+        [HttpGet("title/{title}")]
+        public async Task<IActionResult> GetCourseByTitleAsync([FromRoute] string title)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var course = await _context.Courses.Where(m => m.Title == title).ToListAsync();
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(course);
+        }
+
         // PUT: api/Courses/5
+        /// <summary>
+        /// Modifica corsi in base all'ID.
+        /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCourse([FromRoute] int id, [FromBody] Course course)
+        public async Task<IActionResult> PutCourseAsync([FromRoute] int id, [FromBody] Course course)
         {
             if (!ModelState.IsValid)
             {
@@ -81,9 +113,26 @@ namespace WebApiRestFul.Controllers
             return NoContent();
         }
 
+
         // POST: api/Courses
+        /// <summary>
+        /// Aggiunge corsi in base all'ID.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Course
+        ///     {
+        ///        "id": 4,
+        ///        "title": "informatica",
+        ///        "credits":  "Nesi"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="course"></param>
+        /// <returns>A newly-created CourseItem</returns>
         [HttpPost]
-        public async Task<IActionResult> PostCourse([FromBody] Course course)
+        public async Task<IActionResult> PostCourseAsync([FromBody] Course course)
         {
             if (!ModelState.IsValid)
             {
@@ -93,12 +142,16 @@ namespace WebApiRestFul.Controllers
             _context.Courses.Add(course);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCourse", new { id = course.ID }, course);
+            CreatedAtAction("GetCourse", new { id = course.ID }, course);
+            return Ok(ModelState);
         }
 
         // DELETE: api/Courses/5
+        /// <summary>
+        /// Cancella corsi in base all'ID.
+        /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCourse([FromRoute] int id)
+        public async Task<IActionResult> DeleteCourseAsync([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {

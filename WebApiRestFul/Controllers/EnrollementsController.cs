@@ -21,6 +21,9 @@ namespace WebApiRestFul.Controllers
         }
 
         // GET: api/Enrollements
+        /// <summary>
+        /// Mostra tutte le Icrizioni.
+        /// </summary>
         [HttpGet]
         public IEnumerable<Enrollement> GetEnrollements()
         {
@@ -28,8 +31,11 @@ namespace WebApiRestFul.Controllers
         }
 
         // GET: api/Enrollements/5
+        /// <summary>
+        /// Mostra iscrizione in base all'ID.
+        /// </summary>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEnrollement([FromRoute] int id)
+        public async Task<IActionResult> GetEnrollementAsync([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
@@ -46,9 +52,36 @@ namespace WebApiRestFul.Controllers
             return Ok(enrollement);
         }
 
+        // GET api/Enrollements/all/IDstudent
+        /// <summary>
+        /// Mostra iscrizione in base all'ID dello studente.
+        /// </summary>
+        [HttpGet("all/{IDstudent}")]
+        public async Task<IActionResult> GetEnrollementByStudentID([FromRoute] int IDstudent)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var enrollements = await _context.Enrollements.Where(m => m.StudentID == IDstudent).ToListAsync();
+           
+            if(enrollements == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(enrollements);
+
+        }
+
+
         // PUT: api/Enrollements/5
+        /// <summary>
+        /// Modifica iscrizione in base all'ID.
+        /// </summary>
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutEnrollement([FromRoute] int id, [FromBody] Enrollement enrollement)
+        public async Task<IActionResult> PutEnrollementAsync([FromRoute] int id, [FromBody] Enrollement enrollement)
         {
             if (!ModelState.IsValid)
             {
@@ -82,8 +115,25 @@ namespace WebApiRestFul.Controllers
         }
 
         // POST: api/Enrollements
+        /// <summary>
+        /// Aggiunge iscrizione in base all'ID.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///    POST /Enrollements
+        ///     {
+        ///        "EnrlomentsID": 5,
+        ///        "StudentID": 2,
+        ///        "CourseID": 5,
+        ///        "Grade" : 1
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="course"></param>
+        /// <returns>A newly-created CourseItem</returns>
         [HttpPost]
-        public async Task<IActionResult> PostEnrollement([FromBody] Enrollement enrollement)
+        public async Task<IActionResult> PostEnrollementAsync([FromBody] Enrollement enrollement)
         {
             if (!ModelState.IsValid)
             {
@@ -93,12 +143,17 @@ namespace WebApiRestFul.Controllers
             _context.Enrollements.Add(enrollement);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEnrollement", new { id = enrollement.EnrollementID }, enrollement);
+            CreatedAtAction("GetEnrollement", new { id = enrollement.EnrollementID }, enrollement);
+            return Ok(ModelState);
+
         }
 
         // DELETE: api/Enrollements/5
+        /// <summary>
+        /// Cancella iscrizione in base all'ID.
+        /// </summary>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteEnrollement([FromRoute] int id)
+        public async Task<IActionResult> DeleteEnrollementAsync([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
